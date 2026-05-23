@@ -9,7 +9,8 @@ use pizza_engine::analysis::Analyzer;
 use crate::{
     KuromojiBaseformFilter, KuromojiMode, KuromojiNumberFilter,
     KuromojiPartOfSpeechFilter, KuromojiReadingformFilter, KuromojiStemmerFilter,
-    KuromojiTokenizer, JapaneseStopFilter, ReadingFormType,
+    KuromojiTokenizer, JapaneseStopFilter, JapaneseCompletionFilter, CompletionMode,
+    ReadingFormType,
 };
 
 /// Register Kuromoji tokenizers, token filters, and analyzers.
@@ -17,7 +18,7 @@ use crate::{
 /// Matches Elasticsearch's analysis-kuromoji plugin registration:
 /// - Tokenizer: `kuromoji_tokenizer` (search mode by default)
 /// - Filters: `kuromoji_baseform`, `kuromoji_part_of_speech`, `kuromoji_readingform`,
-///   `kuromoji_stemmer`, `kuromoji_number`, `ja_stop`
+///   `kuromoji_stemmer`, `kuromoji_number`, `ja_stop`, `kuromoji_completion`
 /// - Analyzer: `kuromoji` (JapaneseAnalyzer pipeline)
 pub fn register_all(factory: &mut AnalysisFactory) {
     // Tokenizers
@@ -30,6 +31,7 @@ pub fn register_all(factory: &mut AnalysisFactory) {
     factory.register_token_filter("kuromoji_stemmer", Box::new(KuromojiStemmerFilter::new()));
     factory.register_token_filter("kuromoji_number", Box::new(KuromojiNumberFilter::new()));
     factory.register_token_filter("ja_stop", Box::new(JapaneseStopFilter::new()));
+    factory.register_token_filter("kuromoji_completion", Box::new(JapaneseCompletionFilter::new(CompletionMode::Index)));
 
     // Analyzer: kuromoji (matches Lucene JapaneseAnalyzer pipeline)
     // Pipeline: tokenizer(search) → baseform → part_of_speech → ja_stop → stemmer

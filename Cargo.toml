@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["INFINI Labs <hello@infini.ltd>"]
 edition = "2021"
 license = "MIT"
-description = "Japanese morphological analysis for INFINI Pizza — wraps lindera with IPADIC"
+description = "Japanese morphological analysis plugin for INFINI Pizza (IPADIC)"
 repository = "https://pizza.rs"
 keywords = ["pizza", "japanese", "kuromoji", "tokenizer", "morphology"]
 
