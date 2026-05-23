@@ -1,87 +1,75 @@
-# pizza-analysis-kuromoji
+<div align="center">
 
-Japanese morphological analysis for the [Pizza](https://pizza.rs) search engine. Wraps the [Lindera](https://github.com/lindera/lindera) library with the IPADIC dictionary for tokenization, reading form extraction, and stemming.
+# 🇯🇵 pizza-analysis-kuromoji
+
+**Japanese morphological analysis plugin for [INFINI Pizza](https://pizza.rs)**
+
+[![Crate](https://img.shields.io/badge/crate-pizza--analysis--kuromoji-blue)](https://github.com/pizza-rs/analysis-kuromoji)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+</div>
+
+---
+
+## Overview
+
+A full-featured Japanese morphological analyzer built on [lindera](https://github.com/lindera/lindera)
+with IPADIC dictionary. Provides tokenization with part-of-speech analysis, base form
+reduction, reading form conversion, and katakana stemming — matching the Elasticsearch
+`analysis-kuromoji` plugin feature set.
 
 ## Components
 
-| Name | Type | Description |
-|------|------|-------------|
-| `kuromoji_tokenizer` | Tokenizer | Japanese morphological tokenizer with search mode |
-| `kuromoji_baseform` | Token Filter | Reduce conjugated forms to dictionary form |
-| `kuromoji_part_of_speech` | Token Filter | Remove tokens by part-of-speech (POS) tags |
-| `kuromoji_readingform` | Token Filter | Output katakana reading of tokens |
-| `kuromoji_stemmer` | Token Filter | Stem trailing long vowels (ー) in katakana |
-| `kuromoji_number` | Token Filter | Normalize kanji numerals to Arabic digits |
-| `ja_stop` | Token Filter | Remove Japanese stop words |
-| `kuromoji` | Analyzer | Full Japanese pipeline |
-
-## Usage
-
-### Full Analyzer
-
-The `kuromoji` analyzer combines all components into a standard Japanese analysis pipeline:
-
-```json
-{
-  "analyzer": {
-    "type": "kuromoji"
-  }
-}
-```
-
-Pipeline: `kuromoji_tokenizer` → `kuromoji_baseform` → `kuromoji_part_of_speech` → `ja_stop` → `kuromoji_stemmer`
+| Type | Name | Description |
+|:-----|:-----|:------------|
+| Tokenizer | `kuromoji_tokenizer` | Morphological tokenizer (Normal / Search / Extended modes) |
+| TokenFilter | `kuromoji_baseform` | Replace conjugated forms with dictionary base form |
+| TokenFilter | `kuromoji_part_of_speech` | Remove tokens by POS tag (stop-by-grammar) |
+| TokenFilter | `kuromoji_readingform` | Replace with katakana or romaji reading |
+| TokenFilter | `kuromoji_stemmer` | Stem katakana long vowels (コンピューター → コンピュータ) |
+| TokenFilter | `kuromoji_number` | Normalize Japanese Kanji numbers to Arabic |
+| TokenFilter | `ja_stop` | Japanese stop words |
+| Analyzer | `kuromoji` | Full pipeline: kuromoji_tokenizer → baseform → POS → stop |
 
 ### Tokenizer Modes
 
-| Mode | Description |
-|------|-------------|
-| `normal` | Standard segmentation, no decomposition |
-| `search` | Decomposes compound words for better recall (default) |
-| `extended` | Like search but also segments unknown katakana words |
+| Mode | Behavior | Use Case |
+|:-----|:---------|:---------|
+| `Normal` | Standard morphological segmentation | General purpose |
+| `Search` | Decompound + emit both original & parts | Search indexing |
+| `Extended` | Like Search, but unknown chars → unigrams | Maximum recall |
 
-### Examples
+## Example
 
-**Input:** `関西国際空港`
+```rust
+use pizza_engine::analysis::Tokenizer;
+use pizza_analysis_kuromoji::{KuromojiTokenizer, KuromojiMode};
 
-| Mode | Output |
-|------|--------|
-| Normal | `関西国際空港` |
-| Search | `関西`, `国際`, `空港`, `関西国際空港` |
-
-**Input:** `寿司が食べたい`
-
-| Component | Output |
-|-----------|--------|
-| Tokenizer | `寿司`, `が`, `食べ`, `たい` |
-| + Baseform | `寿司`, `が`, `食べる`, `たい` |
-| + POS filter | `寿司`, `食べる` |
-
-### Custom Analyzer
-
-```json
-{
-  "analyzer": {
-    "type": "custom",
-    "tokenizer": "kuromoji_tokenizer",
-    "filter": ["kuromoji_baseform", "kuromoji_part_of_speech", "ja_stop", "kuromoji_stemmer"]
-  }
-}
+let tk = KuromojiTokenizer::new(KuromojiMode::Search);
+let tokens = tk.tokenize("関西国際空港");
+// Search mode decompounds: ["関西", "国際", "空港", "関西国際空港"]
 ```
 
-## Stop Words
+## Installation
 
-Default Japanese stop words include common particles and auxiliary verbs:
-`の`, `に`, `は`, `を`, `た`, `が`, `で`, `て`, `と`, `し`, `れ`, `さ`, `ある`, `いる`, `する`, `から`, `こと`, `として`, `できる`, `これ`, `ない`, `なる`, `ため`, `その`, `もの`, `という`, `よう`, ...
+```toml
+[dependencies]
+pizza-analysis-kuromoji = "0.1"
+```
 
-## Data Sources
+Or via `pizza-analysis-all`:
 
-- **Dictionary**: IPADIC (IPA Dictionary for MeCab) — the same dictionary used by Apache Lucene's Kuromoji
-- **Embedded via**: `lindera` 3.0 with `embed-ipadic` feature
-
-## Features
-
-- `embed-dict` (default) — Embeds the IPADIC dictionary at compile time (~14MB binary)
+```toml
+[dependencies]
+pizza-analysis-all = { version = "0.1", features = ["kuromoji"] }
+```
 
 ## License
 
-Apache-2.0
+MIT
+
+---
+
+<div align="center">
+<sub>Part of the <a href="https://pizza.rs">INFINI Pizza</a> ecosystem</sub>
+</div>
