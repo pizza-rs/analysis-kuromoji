@@ -1,0 +1,22 @@
+[package]
+name = "pizza-analysis-kuromoji"
+version = "0.1.0"
+authors = ["INFINI Labs <hello@infini.ltd>"]
+edition = "2021"
+license = "MIT"
+description = "Japanese morphological analysis for INFINI Pizza — wraps lindera with IPADIC"
+repository = "https://pizza.rs"
+keywords = ["pizza", "japanese", "kuromoji", "tokenizer", "morphology"]
+
+
+[features]
+default = ["embed-dict"]
+embed-dict = ["lindera/embed-ipadic"]
+std = ["pizza-engine/std"]
+
+[dependencies]
+pizza-engine = { path = "../../lib/engine", default-features = false }
+hashbrown = { version = "0.14", default-features = false }
+lindera = { version = "3.0", default-features = false }
+
+[dev-dependencies]
