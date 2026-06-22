@@ -21,6 +21,7 @@ mod readingform;
 mod stemmer;
 mod number;
 mod stop;
+mod completion;
 
 pub use tokenizer::{KuromojiTokenizer, KuromojiMode};
 pub use baseform::KuromojiBaseformFilter;
@@ -29,5 +30,6 @@ pub use readingform::{KuromojiReadingformFilter, ReadingFormType};
 pub use stemmer::KuromojiStemmerFilter;
 pub use number::KuromojiNumberFilter;
 pub use stop::JapaneseStopFilter;
+pub use completion::{JapaneseCompletionFilter, CompletionMode};
 pub mod register;
 pub use register::register_all;
