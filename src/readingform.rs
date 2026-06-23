@@ -6,7 +6,6 @@
 use alloc::borrow::Cow;
 use alloc::sync::Arc;
 
-use lindera::dictionary::load_dictionary;
 use lindera::mode::Mode as LinderaMode;
 use lindera::segmenter::Segmenter;
 use lindera::tokenizer::Tokenizer as LinderaTokenizer;
@@ -34,8 +33,7 @@ pub struct KuromojiReadingformFilter {
 impl KuromojiReadingformFilter {
     /// Create a reading form filter with the specified output type.
     pub fn new(reading_type: ReadingFormType) -> Self {
-        let dictionary = load_dictionary("embedded://ipadic")
-            .expect("failed to load embedded IPADIC dictionary");
+        let dictionary = crate::dict::load_ipadic();
         let segmenter = Segmenter::new(LinderaMode::Normal, dictionary, None);
         let tokenizer = LinderaTokenizer::new(segmenter);
         Self {

@@ -22,6 +22,7 @@ mod stemmer;
 mod number;
 mod stop;
 mod completion;
+mod dict;
 
 pub use tokenizer::{KuromojiTokenizer, KuromojiMode};
 pub use baseform::KuromojiBaseformFilter;

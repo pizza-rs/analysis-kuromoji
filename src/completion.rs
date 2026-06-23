@@ -17,7 +17,6 @@ use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
 
-use lindera::dictionary::load_dictionary;
 use lindera::mode::Mode as LinderaMode;
 use lindera::segmenter::Segmenter;
 use lindera::tokenizer::Tokenizer as LinderaTokenizer;
@@ -54,8 +53,7 @@ pub struct JapaneseCompletionFilter {
 impl JapaneseCompletionFilter {
     /// Create with the specified mode.
     pub fn new(mode: CompletionMode) -> Self {
-        let dictionary = load_dictionary("embedded://ipadic")
-            .expect("failed to load embedded IPADIC dictionary");
+        let dictionary = crate::dict::load_ipadic();
         let segmenter = Segmenter::new(LinderaMode::Normal, dictionary, None);
         let tokenizer = LinderaTokenizer::new(segmenter);
         Self {
