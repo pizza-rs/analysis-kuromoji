@@ -5,20 +5,85 @@
 
 use hashbrown::HashSet;
 
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Default Japanese stop words (common particles, copulas, punctuation words).
 pub const JAPANESE_STOP_WORDS: &[&str] = &[
-    "の", "に", "は", "を", "た", "が", "で", "て", "と", "し",
-    "れ", "さ", "ある", "いる", "も", "する", "から", "な", "こと",
-    "として", "い", "や", "れる", "など", "なっ", "ない", "この",
-    "ため", "その", "あっ", "よう", "また", "もの", "という", "あり",
-    "まで", "られ", "なる", "へ", "か", "だ", "これ", "によって",
-    "により", "おり", "より", "による", "ず", "なり", "られる",
-    "において", "に対して", "ほか", "ながら", "うち", "そして",
-    "とともに", "ただし", "かつて", "それぞれ", "または", "お",
-    "ほど", "ものの", "についで", "あ", "う", "え", "お", "か",
-    "き", "く", "け", "こ",
+    "の",
+    "に",
+    "は",
+    "を",
+    "た",
+    "が",
+    "で",
+    "て",
+    "と",
+    "し",
+    "れ",
+    "さ",
+    "ある",
+    "いる",
+    "も",
+    "する",
+    "から",
+    "な",
+    "こと",
+    "として",
+    "い",
+    "や",
+    "れる",
+    "など",
+    "なっ",
+    "ない",
+    "この",
+    "ため",
+    "その",
+    "あっ",
+    "よう",
+    "また",
+    "もの",
+    "という",
+    "あり",
+    "まで",
+    "られ",
+    "なる",
+    "へ",
+    "か",
+    "だ",
+    "これ",
+    "によって",
+    "により",
+    "おり",
+    "より",
+    "による",
+    "ず",
+    "なり",
+    "られる",
+    "において",
+    "に対して",
+    "ほか",
+    "ながら",
+    "うち",
+    "そして",
+    "とともに",
+    "ただし",
+    "かつて",
+    "それぞれ",
+    "または",
+    "お",
+    "ほど",
+    "ものの",
+    "についで",
+    "あ",
+    "う",
+    "え",
+    "お",
+    "か",
+    "き",
+    "く",
+    "け",
+    "こ",
 ];
 
 /// Removes Japanese stop words from the token stream.
@@ -33,10 +98,7 @@ impl JapaneseStopFilter {
     /// Create with default Japanese stop words.
     pub fn new() -> Self {
         Self {
-            stop_words: JAPANESE_STOP_WORDS
-                .iter()
-                .map(|s| s.to_string())
-                .collect(),
+            stop_words: JAPANESE_STOP_WORDS.iter().map(|s| s.to_string()).collect(),
         }
     }
 

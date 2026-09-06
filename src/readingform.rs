@@ -10,7 +10,8 @@ use lindera::mode::Mode as LinderaMode;
 use lindera::segmenter::Segmenter;
 use lindera::tokenizer::Tokenizer as LinderaTokenizer;
 
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Output format for the reading form.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

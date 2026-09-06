@@ -6,7 +6,8 @@
 
 use alloc::borrow::Cow;
 
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Normalizes Kanji/fullwidth numeral tokens to Arabic digits.
 ///
@@ -31,7 +32,10 @@ impl TokenFilter for KuromojiNumberFilter {
         let term = token.term.as_ref();
 
         // Try fullwidth digit normalization first
-        if term.chars().all(|ch| is_fullwidth_digit(ch) || ch == '．' || ch == '，') {
+        if term
+            .chars()
+            .all(|ch| is_fullwidth_digit(ch) || ch == '．' || ch == '，')
+        {
             let normalized: String = term
                 .chars()
                 .filter_map(|ch| {
@@ -74,8 +78,21 @@ fn fullwidth_to_ascii(ch: char) -> char {
 fn is_kanji_numeral(ch: char) -> bool {
     matches!(
         ch,
-        '〇' | '一' | '二' | '三' | '四' | '五' | '六' | '七' | '八' | '九' | '十' | '百' | '千'
-            | '万' | '億' | '兆'
+        '〇' | '一'
+            | '二'
+            | '三'
+            | '四'
+            | '五'
+            | '六'
+            | '七'
+            | '八'
+            | '九'
+            | '十'
+            | '百'
+            | '千'
+            | '万'
+            | '億'
+            | '兆'
     )
 }
 
@@ -89,7 +106,10 @@ fn parse_kanji_number(s: &str) -> Option<u64> {
 
     // Simple digit-only case (〇一二三 positional style)
     if chars.iter().all(|&ch| kanji_digit(ch).is_some()) {
-        let result: String = chars.iter().filter_map(|&ch| kanji_digit(ch).map(|d| char::from(b'0' + d as u8))).collect();
+        let result: String = chars
+            .iter()
+            .filter_map(|&ch| kanji_digit(ch).map(|d| char::from(b'0' + d as u8)))
+            .collect();
         return result.parse::<u64>().ok();
     }
 

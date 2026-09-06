@@ -4,24 +4,19 @@
 //! POS tags in IPADIC are hierarchical, e.g. "助詞,格助詞,一般".
 //! A configured tag "助詞" will match "助詞,格助詞,一般" (prefix matching).
 
-use hashbrown::HashSet;
 use alloc::sync::Arc;
+use hashbrown::HashSet;
 
 use lindera::mode::Mode as LinderaMode;
 use lindera::segmenter::Segmenter;
 use lindera::tokenizer::Tokenizer as LinderaTokenizer;
 
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Default Japanese stop tags (functional words that add little search value).
-pub const DEFAULT_STOP_TAGS: &[&str] = &[
-    "助詞",
-    "助動詞",
-    "接続詞",
-    "記号",
-    "フィラー",
-    "非言語音",
-];
+pub const DEFAULT_STOP_TAGS: &[&str] =
+    &["助詞", "助動詞", "接続詞", "記号", "フィラー", "非言語音"];
 
 /// Removes tokens matching specified part-of-speech tags.
 ///
@@ -63,7 +58,12 @@ impl KuromojiPartOfSpeechFilter {
         // lindera 3.x fetches details lazily via details()
         let details = token.details();
         // Build full POS tag string: "名詞,一般,*,*"
-        let pos = details.iter().take(4).cloned().collect::<Vec<_>>().join(",");
+        let pos = details
+            .iter()
+            .take(4)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(",");
         // Check if any stop tag is a prefix of the full POS
         for tag in &self.stop_tags {
             if pos.starts_with(tag.as_str()) {

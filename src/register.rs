@@ -6,12 +6,17 @@ use alloc::vec;
 use pizza_engine::analysis::AnalysisFactory;
 use pizza_engine::analysis::Analyzer;
 
-use crate::{
-    KuromojiBaseformFilter, KuromojiMode, KuromojiNumberFilter,
-    KuromojiPartOfSpeechFilter, KuromojiReadingformFilter, KuromojiStemmerFilter,
-    KuromojiTokenizer, JapaneseStopFilter, JapaneseCompletionFilter, CompletionMode,
-    ReadingFormType,
-};
+use crate::CompletionMode;
+use crate::JapaneseCompletionFilter;
+use crate::JapaneseStopFilter;
+use crate::KuromojiBaseformFilter;
+use crate::KuromojiMode;
+use crate::KuromojiNumberFilter;
+use crate::KuromojiPartOfSpeechFilter;
+use crate::KuromojiReadingformFilter;
+use crate::KuromojiStemmerFilter;
+use crate::KuromojiTokenizer;
+use crate::ReadingFormType;
 
 /// Register Kuromoji tokenizers, token filters, and analyzers.
 ///
@@ -22,22 +27,33 @@ use crate::{
 /// - Analyzer: `kuromoji` (JapaneseAnalyzer pipeline)
 pub fn register_all(factory: &mut AnalysisFactory) {
     // Tokenizers
-    factory.register_tokenizer_with("kuromoji_tokenizer", || Box::new(KuromojiTokenizer::new(KuromojiMode::Search)));
+    factory.register_tokenizer_with("kuromoji_tokenizer", || {
+        Box::new(KuromojiTokenizer::new(KuromojiMode::Search))
+    });
 
     // Token filters
-    factory.register_token_filter_with("kuromoji_baseform", || Box::new(KuromojiBaseformFilter::new()));
-    factory.register_token_filter_with("kuromoji_part_of_speech", || Box::new(KuromojiPartOfSpeechFilter::with_defaults()));
-    factory.register_token_filter_with("kuromoji_readingform", || Box::new(KuromojiReadingformFilter::new(ReadingFormType::Katakana)));
-    factory.register_token_filter_with("kuromoji_stemmer", || Box::new(KuromojiStemmerFilter::new()));
+    factory.register_token_filter_with("kuromoji_baseform", || {
+        Box::new(KuromojiBaseformFilter::new())
+    });
+    factory.register_token_filter_with("kuromoji_part_of_speech", || {
+        Box::new(KuromojiPartOfSpeechFilter::with_defaults())
+    });
+    factory.register_token_filter_with("kuromoji_readingform", || {
+        Box::new(KuromojiReadingformFilter::new(ReadingFormType::Katakana))
+    });
+    factory.register_token_filter_with("kuromoji_stemmer", || {
+        Box::new(KuromojiStemmerFilter::new())
+    });
     factory.register_token_filter_with("kuromoji_number", || Box::new(KuromojiNumberFilter::new()));
     factory.register_token_filter_with("ja_stop", || Box::new(JapaneseStopFilter::new()));
-    factory.register_token_filter_with("kuromoji_completion", || Box::new(JapaneseCompletionFilter::new(CompletionMode::Index)));
+    factory.register_token_filter_with("kuromoji_completion", || {
+        Box::new(JapaneseCompletionFilter::new(CompletionMode::Index))
+    });
 
     // Analyzer: kuromoji (matches Lucene JapaneseAnalyzer pipeline)
     // Pipeline: tokenizer(search) → baseform → part_of_speech → ja_stop → stemmer
-    factory.register_analyzer_with(
-        "kuromoji",
-        || Analyzer::new(
+    factory.register_analyzer_with("kuromoji", || {
+        Analyzer::new(
             vec![],
             Box::new(KuromojiTokenizer::new(KuromojiMode::Search)),
             vec![
@@ -46,6 +62,6 @@ pub fn register_all(factory: &mut AnalysisFactory) {
                 Box::new(JapaneseStopFilter::new()),
                 Box::new(KuromojiStemmerFilter::new()),
             ],
-        ),
-    );
+        )
+    });
 }

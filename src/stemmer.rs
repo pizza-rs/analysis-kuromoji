@@ -9,7 +9,8 @@
 
 use alloc::borrow::Cow;
 
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Default minimum token length (in chars) before stemming applies.
 const DEFAULT_MIN_LENGTH: usize = 4;

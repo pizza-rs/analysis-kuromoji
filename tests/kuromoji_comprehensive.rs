@@ -1,7 +1,10 @@
 //! Comprehensive tests for the `pizza-analysis-kuromoji` crate.
 
 use pizza_analysis_kuromoji::*;
-use pizza_engine::analysis::{AnalysisFactory, Token, TokenFilter, Tokenizer};
+use pizza_engine::analysis::AnalysisFactory;
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
+use pizza_engine::analysis::Tokenizer;
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -119,11 +122,7 @@ mod tokenizer {
         let tokens = tok.tokenize("Java言語");
         let t = terms(&tokens);
         assert!(t.len() >= 2, "should split mixed text, got {:?}", t);
-        assert!(
-            t.iter().any(|s| *s == "Java"),
-            "expected Java in {:?}",
-            t
-        );
+        assert!(t.iter().any(|s| *s == "Java"), "expected Java in {:?}", t);
     }
 
     #[test]
@@ -185,10 +184,7 @@ mod tokenizer {
         let tok = KuromojiTokenizer::new(KuromojiMode::Normal);
         let tokens = tok.tokenize("東京都に行く");
         for (i, token) in tokens.iter().enumerate() {
-            assert_eq!(
-                token.position, i as u32,
-                "positions should be sequential"
-            );
+            assert_eq!(token.position, i as u32, "positions should be sequential");
         }
     }
 
@@ -309,10 +305,7 @@ mod part_of_speech {
     fn keeps_noun() {
         let filter = KuromojiPartOfSpeechFilter::with_defaults();
         // "東京" is a proper noun
-        assert!(
-            !filter_deleted(&filter, "東京"),
-            "noun 東京 should be kept"
-        );
+        assert!(!filter_deleted(&filter, "東京"), "noun 東京 should be kept");
     }
 
     #[test]
@@ -388,7 +381,9 @@ mod readingform {
         let result = filter_term(&filter, "コンピューター");
         // Should be katakana reading
         assert!(
-            result.chars().all(|c| c >= '\u{30A0}' && c <= '\u{30FF}' || c == 'ー'),
+            result
+                .chars()
+                .all(|c| c >= '\u{30A0}' && c <= '\u{30FF}' || c == 'ー'),
             "katakana input reading should be katakana, got: {}",
             result
         );
@@ -659,7 +654,10 @@ mod stop {
             JapaneseStopFilter::with_words(vec!["カスタム".to_string(), "テスト".to_string()]);
         assert!(filter_deleted(&filter, "カスタム"));
         assert!(filter_deleted(&filter, "テスト"));
-        assert!(!filter_deleted(&filter, "の"), "default words not in custom list");
+        assert!(
+            !filter_deleted(&filter, "の"),
+            "default words not in custom list"
+        );
     }
 
     #[test]
@@ -769,7 +767,9 @@ mod register {
         let mut factory = AnalysisFactory::new();
         register_all(&mut factory);
         assert!(
-            factory.get_token_filter("kuromoji_part_of_speech").is_some(),
+            factory
+                .get_token_filter("kuromoji_part_of_speech")
+                .is_some(),
             "kuromoji_part_of_speech filter should be registered"
         );
     }
@@ -851,8 +851,7 @@ mod pipeline {
         let stemmer = KuromojiStemmerFilter::new();
 
         let mut tokens = tokenizer.tokenize(text);
-        let filters: Vec<&dyn TokenFilter> =
-            vec![&baseform, &pos_filter, &stop, &stemmer];
+        let filters: Vec<&dyn TokenFilter> = vec![&baseform, &pos_filter, &stop, &stemmer];
 
         let mut result = Vec::new();
         for token in &mut tokens {

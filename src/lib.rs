@@ -14,23 +14,26 @@
 //! - [`KuromojiNumberFilter`] — Normalize Kanji numerals to Arabic digits
 //! - [`JapaneseStopFilter`] — Japanese stop word removal
 extern crate alloc;
-mod tokenizer;
 mod baseform;
+mod completion;
+mod dict;
+mod number;
 mod part_of_speech;
 mod readingform;
 mod stemmer;
-mod number;
 mod stop;
-mod completion;
-mod dict;
+mod tokenizer;
 
-pub use tokenizer::{KuromojiTokenizer, KuromojiMode};
 pub use baseform::KuromojiBaseformFilter;
-pub use part_of_speech::KuromojiPartOfSpeechFilter;
-pub use readingform::{KuromojiReadingformFilter, ReadingFormType};
-pub use stemmer::KuromojiStemmerFilter;
+pub use completion::CompletionMode;
+pub use completion::JapaneseCompletionFilter;
 pub use number::KuromojiNumberFilter;
+pub use part_of_speech::KuromojiPartOfSpeechFilter;
+pub use readingform::KuromojiReadingformFilter;
+pub use readingform::ReadingFormType;
+pub use stemmer::KuromojiStemmerFilter;
 pub use stop::JapaneseStopFilter;
-pub use completion::{JapaneseCompletionFilter, CompletionMode};
+pub use tokenizer::KuromojiMode;
+pub use tokenizer::KuromojiTokenizer;
 pub mod register;
 pub use register::register_all;
