@@ -44,19 +44,19 @@ impl KuromojiReadingformFilter {
 
     /// Get the reading for a token surface.
     fn get_reading(&self, surface: &str) -> Option<String> {
-        let tokens = self.inner.tokenize(surface).ok()?;
+        let mut tokens = self.inner.tokenize(surface).ok()?;
         if tokens.len() != 1 {
             return None;
         }
-        let token = &tokens[0];
-        if let Some(ref details) = token.details {
-            // IPADIC detail[7] = reading (読み) in katakana
-            if details.len() > 7 && details[7] != "*" {
-                let katakana = &details[7];
-                match self.reading_type {
-                    ReadingFormType::Katakana => return Some(katakana.to_string()),
-                    ReadingFormType::Romaji => return Some(katakana_to_romaji(katakana)),
-                }
+        let token = &mut tokens[0];
+        // lindera 3.x fetches details lazily via details()
+        let details = token.details();
+        // IPADIC detail[7] = reading (読み) in katakana
+        if details.len() > 7 && details[7] != "*" {
+            let katakana = details[7];
+            match self.reading_type {
+                ReadingFormType::Katakana => return Some(katakana.to_string()),
+                ReadingFormType::Romaji => return Some(katakana_to_romaji(katakana)),
             }
         }
         None

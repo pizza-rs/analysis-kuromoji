@@ -52,22 +52,22 @@ impl KuromojiPartOfSpeechFilter {
 
     /// Check if token's POS matches any stop tag.
     fn should_remove(&self, surface: &str) -> bool {
-        let tokens = match self.inner.tokenize(surface) {
+        let mut tokens = match self.inner.tokenize(surface) {
             Ok(t) => t,
             Err(_) => return false,
         };
         if tokens.len() != 1 {
             return false;
         }
-        let token = &tokens[0];
-        if let Some(ref details) = token.details {
-            // Build full POS tag string: "名詞,一般,*,*"
-            let pos = details.iter().take(4).cloned().collect::<Vec<_>>().join(",");
-            // Check if any stop tag is a prefix of the full POS
-            for tag in &self.stop_tags {
-                if pos.starts_with(tag.as_str()) {
-                    return true;
-                }
+        let token = &mut tokens[0];
+        // lindera 3.x fetches details lazily via details()
+        let details = token.details();
+        // Build full POS tag string: "名詞,一般,*,*"
+        let pos = details.iter().take(4).cloned().collect::<Vec<_>>().join(",");
+        // Check if any stop tag is a prefix of the full POS
+        for tag in &self.stop_tags {
+            if pos.starts_with(tag.as_str()) {
+                return true;
             }
         }
         false

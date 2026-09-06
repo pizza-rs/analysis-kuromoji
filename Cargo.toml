@@ -11,12 +11,13 @@ keywords = ["pizza", "japanese", "kuromoji", "tokenizer", "morphology"]
 
 [features]
 default = ["embed-dict"]
-embed-dict = ["lindera/embed-ipadic"]
+embed-dict = ["lindera/embed-ipadic", "lindera-ipadic/embed-ipadic"]
 std = ["pizza-engine/std"]
 
 [dependencies]
 pizza-engine = { path = "../../lib/engine", default-features = false }
 hashbrown = { version = "0.14", default-features = false }
 lindera = { version = "3.0", default-features = false }
+lindera-ipadic = { version = "3.0", default-features = false }
 
 [dev-dependencies]

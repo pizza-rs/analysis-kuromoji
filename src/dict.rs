@@ -29,7 +29,10 @@ pub(crate) fn load_ipadic() -> Dictionary {
 
     #[cfg(feature = "embed-dict")]
     {
-        crate::dict::load_ipadic()
+        // lindera-ipadic's embedded dictionary (the previous code recursed
+        // into load_ipadic itself, overflowing the stack on first use)
+        lindera_ipadic::embedded::load()
+            .unwrap_or_else(|e| panic!("failed to load embedded IPADIC dictionary: {e}"))
     }
 
     #[cfg(not(feature = "embed-dict"))]

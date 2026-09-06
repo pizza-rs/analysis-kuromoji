@@ -68,7 +68,7 @@ fn is_fullwidth_digit(ch: char) -> bool {
 }
 
 fn fullwidth_to_ascii(ch: char) -> char {
-    char::from(ch as u8 - b'\xef' + b'0' + (ch as u32 - '０' as u32) as u8)
+    char::from(b'0' + (ch as u32 - '０' as u32) as u8)
 }
 
 fn is_kanji_numeral(ch: char) -> bool {

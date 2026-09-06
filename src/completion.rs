@@ -64,22 +64,21 @@ impl JapaneseCompletionFilter {
 
     /// Get katakana reading for a surface form.
     fn get_katakana_reading(&self, surface: &str) -> Option<String> {
-        let tokens = self.inner.tokenize(surface).ok()?;
+        let mut tokens = self.inner.tokenize(surface).ok()?;
         if tokens.is_empty() {
             return None;
         }
         // Concatenate readings of all sub-tokens
         let mut reading = String::new();
-        for token in &tokens {
-            if let Some(ref details) = token.details {
-                // IPADIC detail[7] = reading (読み) in katakana
-                if details.len() > 7 && details[7] != "*" {
-                    reading.push_str(&details[7]);
-                } else {
-                    // No reading available; use surface as-is
-                    reading.push_str(token.surface.as_ref());
-                }
+        for token in &mut tokens {
+            // lindera 3.x fetches details lazily via details(); the
+            // `details` field itself is None straight out of tokenize()
+            let details = token.details();
+            // IPADIC detail[7] = reading (読み) in katakana
+            if details.len() > 7 && details[7] != "*" {
+                reading.push_str(details[7]);
             } else {
+                // No reading available; use surface as-is
                 reading.push_str(token.surface.as_ref());
             }
         }

@@ -39,16 +39,16 @@ impl KuromojiBaseformFilter {
 
     /// Look up the base form of the given surface text using lindera.
     fn get_baseform(&self, surface: &str) -> Option<String> {
-        let tokens = self.inner.tokenize(surface).ok()?;
+        let mut tokens = self.inner.tokenize(surface).ok()?;
         if tokens.len() != 1 {
             return None;
         }
-        let token = &tokens[0];
-        if let Some(ref details) = token.details {
-            // IPADIC detail[6] = base form (原形)
-            if details.len() > 6 && details[6] != "*" && details[6] != surface {
-                return Some(details[6].to_string());
-            }
+        let token = &mut tokens[0];
+        // lindera 3.x fetches details lazily via details()
+        let details = token.details();
+        // IPADIC detail[6] = base form (原形)
+        if details.len() > 6 && details[6] != "*" && details[6] != surface {
+            return Some(details[6].to_string());
         }
         None
     }
