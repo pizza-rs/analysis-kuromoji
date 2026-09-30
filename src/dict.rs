@@ -39,8 +39,9 @@ pub(crate) fn load_ipadic() -> Dictionary {
     {
         panic!(
             "kuromoji IPADIC dictionary not available: place a lindera IPADIC dictionary \
-             directory at <analysis dict dir>/kuromoji/ipadic and configure the analysis dict \
-             path, or build pizza-analysis-kuromoji with the 'embed-dict' feature"
+             directory at config/analysis/kuromoji/ipadic ('make copy-analysis-dicts'; the \
+             analyzer sub-repo ships a cache under data/), or build pizza-analysis-kuromoji \
+             with the 'embed-dict' feature"
         )
     }
 }
