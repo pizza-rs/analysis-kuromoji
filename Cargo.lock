@@ -1411,7 +1411,7 @@ dependencies = [
 [[package]]
 name = "pizza-common"
 version = "0.1.0"
-source = "git+https://github.com/pizza-rs/common?branch=main#c3ba7044ba99aa7a283236c21ea7266be17c6be7"
+source = "git+https://github.com/pizza-rs/common?branch=main#0336c4f07f3cfa6f6bc931e88c8fcba7e210a4c0"
 dependencies = [
  "bytes",
  "camino",
